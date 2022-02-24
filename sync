@@ -1,0 +1,1 @@
+aws s3 sync $HOME s3://${BUCKET_ID}${HOME} --profile backup

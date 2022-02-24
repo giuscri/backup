@@ -1,0 +1,14 @@
+#!/bin/sh -xe
+
+BASE_PATH=~/Library/LaunchAgents
+
+export BUCKET_ID=$(terraform output bucket_id | tr -d '"')
+export SYNC_CMD=$(envsubst < sync)
+envsubst < local.backup.plist.tmpl > /tmp/local.backup.plist
+
+mkdir -p $BASE_PATH
+install -m644 /tmp/local.backup.plist $BASE_PATH
+
+launchctl unload $BASE_PATH/local.backup.plist || true
+launchctl load $BASE_PATH/local.backup.plist
+launchctl start local.backup.plist
